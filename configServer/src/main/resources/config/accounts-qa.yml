@@ -1,0 +1,13 @@
+
+
+build:
+  version: "2.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts related local APIs "
+  contactDetails:
+    name: "Saurav Rawat - QA Lead"
+    email: "saurav@eazybank.com"
+  onCallSupport:
+    - (666) 555-1234
+    - (666) 523-1345

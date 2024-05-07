@@ -1,0 +1,14 @@
+
+
+
+build:
+  version: "1.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts related local APIs "
+  contactDetails:
+    name: "Ayush Khugshal - Product Owner"
+    email: "ayush@eazybank.com"
+  onCallSupport:
+    - (999) 555-1234
+    - (999) 523-1345

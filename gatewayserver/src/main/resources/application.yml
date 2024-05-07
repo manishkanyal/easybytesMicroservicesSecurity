@@ -1,0 +1,72 @@
+spring:
+  application:
+    name: "gatewayserver"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true
+      # This is for global timeout . In accounts microservices we have configured circuitbreaker so this timeout will not work for them because that uses it's internal timeout
+      httpclient:
+        connect-timeout: 1000   #It is the time that our gateway server will take to get connection thread from other microservices.
+        response-timeout: 2s        #This the max time that out gateway server will take to get response from microservice
+  data:     # This property is for Rate Limiter
+    redis:
+      connect-timeout: 2s
+      host: localhost
+      port: 6379
+      timeout: 1s
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://localhost:7080/realms/master/protocol/openid-connect/certs"
+
+          #Above will download the certificate during startup of resource server application (gateway server is resource server) for validating that the access token with oAuth server
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+
+endpoints:
+  shutdown:
+    enabled: true
+
+info:
+  app:
+    name: "gatewayserver"
+    description: "Eazybytes Bank Gateway server application"
+    version: "1.0.0"
+
+logging:
+  level:
+    com:
+      eazybytes:
+        gatewayServer: DEBUG
+
+
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10           #It will monitor 10 request and decide upon to open or close the circuit breaker
+      permittedNumberOfCallsInHalfOpenState: 2      # allowing 2 request in half open state to check to move to open or closed state
+      failureRateThreshold: 50       #If 50% (50% of 10 = 5) of request are failed then circuit will move to open state from closed state.
+      waitDurationInOpenState: 10000  #it will wait for 10000 ms or 10 sec before moving to half open state to allow some traffic to monitor

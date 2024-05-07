@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: "configServer"
+  profiles:
+    #active: native   # This will only activate when we are putting config in springBoot web app itself or in same server but different path
+    active: git
+  cloud:
+    config:
+      server:
+        #native:
+          #search-locations: "file:///E://Spring Microservices//eazyBytes Code//v2-SpringCloudConfig//config"
+          #search-locations: "classpath:/config"  #This is for when yml files are located in resources/config folder
+        git:
+          uri: "https://github.com/eazybytes/eazybytes-config.git"
+          default-label: main   # this is branch name
+          timeout: 5 #Config server will only connect with github for 5 sec
+          clone-on-start: true   # Cloning will happen of gthub repo to local server , when application starts otherwise cloning will happen when first request comes to configServer
+          force-pull: true   # Override all the changes locally that happens in the github repo , to remain updated to properties
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+encrypt:
+  key: "45D81EC1EF61DF9AD8D3E5BB397F9"
+
+
+server:
+  port: 8071
+
+
